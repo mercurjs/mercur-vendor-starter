@@ -2,13 +2,19 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { User } from "@medusajs/medusa";
-import { useAdminGetSession, useAdminUpdateUser } from "medusa-react";
+import {
+  useAdminGetSession,
+  useAdminStore,
+  useAdminUpdateStore,
+  useAdminUpdateUser,
+} from "medusa-react";
 
 import Button from "../../../../components/fundamentals/button";
 import InputField from "../../../../components/molecules/input";
 import Modal from "../../../../components/molecules/modal";
 import useNotification from "../../../../hooks/use-notification";
 import TextArea from "../../../../components/molecules/textarea";
+import { ExtendedStoreDTO } from "@medusajs/medusa/dist/types/store";
 
 type Props = {
   user: Omit<User, "password_hash">;
@@ -19,6 +25,7 @@ type Props = {
 type EditInformationFormType = {
   first_name: string | null;
   last_name: string | null;
+  store_name: string;
   metadata?: {
     billing_info?: string | null;
   };
@@ -26,8 +33,12 @@ type EditInformationFormType = {
 
 const EditUserInformationModal = ({ user, open, onClose }: Props) => {
   const { mutate, isLoading: isSubmitting } = useAdminUpdateUser(user.id);
+  const { mutate: mutateStore } = useAdminUpdateStore();
   const { refetch } = useAdminGetSession();
   const { t } = useTranslation();
+
+  // @ts-ignore
+  const { store } = useAdminStore(user.store_id);
 
   const {
     register,
@@ -35,35 +46,44 @@ const EditUserInformationModal = ({ user, open, onClose }: Props) => {
     formState: { errors },
     reset,
   } = useForm<EditInformationFormType>({
-    defaultValues: getDefaultValues(user),
+    defaultValues: getDefaultValues(user, store),
   });
 
   useEffect(() => {
-    reset(getDefaultValues(user));
+    reset(getDefaultValues(user, store));
   }, [open, user]);
 
   const notification = useNotification();
 
   const onSubmit = handleSubmit((data) => {
-    mutate(
-      // @ts-ignore
-      data,
-      {
-        onSuccess: () => {
-          notification(
-            t("edit-user-information-success", "Success"),
-            t(
-              "edit-user-information-your-information-was-successfully-updated",
-              "Your information was successfully updated"
-            ),
-            "success"
-          );
-          refetch();
-          onClose();
+    Promise.all([
+      mutateStore({
+        name: data.store_name,
+      }),
+      mutate(
+        {
+          first_name: data?.first_name!,
+          last_name: data?.last_name!,
+          metadata: data.metadata,
         },
-        onError: () => {},
-      }
-    );
+        {
+          onSuccess: () => {
+            refetch();
+            onClose();
+          },
+          onError: () => {},
+        }
+      ),
+    ]).then(() => {
+      notification(
+        t("edit-user-information-success", "Success"),
+        t(
+          "edit-user-information-your-information-was-successfully-updated",
+          "Your information was successfully updated"
+        ),
+        "success"
+      );
+    });
   });
 
   return (
@@ -76,6 +96,12 @@ const EditUserInformationModal = ({ user, open, onClose }: Props) => {
       <Modal.Body>
         <Modal.Content>
           <div className="px-2 large:p-0 gap-y-base flex flex-col">
+            <InputField
+              {...register("store_name")}
+              errors={errors}
+              label="Store name"
+              required
+            />
             <div className="gap-x-base grid grid-cols-1 gap-3 small:grid-cols-2">
               <InputField
                 {...register("first_name")}
@@ -118,10 +144,14 @@ const EditUserInformationModal = ({ user, open, onClose }: Props) => {
   );
 };
 
-const getDefaultValues = (user: Omit<User, "password_hash">) => {
+const getDefaultValues = (
+  user: Omit<User, "password_hash">,
+  store: ExtendedStoreDTO | undefined
+) => {
   return {
     first_name: user.first_name,
     last_name: user.last_name,
+    store_name: store?.name,
     metadata: user.metadata,
   };
 };

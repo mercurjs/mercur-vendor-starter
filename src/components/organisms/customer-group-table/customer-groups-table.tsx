@@ -1,5 +1,5 @@
-import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import {
   HeaderGroup,
   Row,
@@ -8,32 +8,32 @@ import {
   usePagination,
   useSortBy,
   useTable,
-} from 'react-table'
-import { CustomerGroup } from '@medusajs/medusa'
+} from "react-table";
+import { CustomerGroup } from "@medusajs/medusa";
 import {
   useAdminCustomerGroups,
   useAdminDeleteCustomerGroup,
-} from 'medusa-react'
+} from "medusa-react";
 
-import useNotification from '../../../hooks/use-notification'
-import useQueryFilters from '../../../hooks/use-query-filters'
-import useSetSearchParams from '../../../hooks/use-set-search-params'
-import DetailsIcon from '../../fundamentals/details-icon'
-import TrashIcon from '../../fundamentals/icons/trash-icon'
-import { ActionType } from '../../molecules/actionables'
-import Table from '../../molecules/table'
-import TableContainer from '../../organisms/table-container'
+import useNotification from "../../../hooks/use-notification";
+import useQueryFilters from "../../../hooks/use-query-filters";
+import useSetSearchParams from "../../../hooks/use-set-search-params";
+import DetailsIcon from "../../fundamentals/details-icon";
+import TrashIcon from "../../fundamentals/icons/trash-icon";
+import { ActionType } from "../../molecules/actionables";
+import Table from "../../molecules/table";
+import TableContainer from "../../organisms/table-container";
 
-import { CUSTOMER_GROUPS_TABLE_COLUMNS } from './config'
+import { CUSTOMER_GROUPS_TABLE_COLUMNS } from "./config";
 
 /**
  * Default filtering config for querying customer groups endpoint.
  */
 const defaultQueryProps = {
-  additionalFilters: { expand: 'customers' },
+  additionalFilters: { expand: "customers" },
   limit: 15,
   offset: 0,
-}
+};
 
 /*
  * Customer groups empty state.
@@ -43,7 +43,7 @@ function CustomerGroupsPlaceholder() {
     <div className="center flex h-full min-h-[756px] items-center justify-center">
       <span className="text-xs text-gray-400">No customer groups yet</span>
     </div>
-  )
+  );
 }
 
 /* ******************************************** */
@@ -51,8 +51,8 @@ function CustomerGroupsPlaceholder() {
 /* ******************************************** */
 
 type HeaderCellProps = {
-  col: HeaderGroup<CustomerGroup>
-}
+  col: HeaderGroup<CustomerGroup>;
+};
 
 /*
  * Renders react-table cell for the customer groups table.
@@ -63,14 +63,14 @@ function CustomerGroupsTableHeaderCell(props: HeaderCellProps) {
       className="w-[100px]"
       {...props.col.getHeaderProps(props.col.getSortByToggleProps())}
     >
-      {props.col.render('Header')}
+      {props.col.render("Header")}
     </Table.HeadCell>
-  )
+  );
 }
 
 type HeaderRowProps = {
-  headerGroup: HeaderGroup<CustomerGroup>
-}
+  headerGroup: HeaderGroup<CustomerGroup>;
+};
 
 /*
  * Renders react-table header row for the customer groups table.
@@ -82,72 +82,72 @@ function CustomerGroupsTableHeaderRow(props: HeaderRowProps) {
         <CustomerGroupsTableHeaderCell key={col.id} col={col} />
       ))}
     </Table.HeadRow>
-  )
+  );
 }
 
 type CustomerGroupsTableRowProps = {
-  row: Row<CustomerGroup>
-}
+  row: Row<CustomerGroup>;
+};
 
 /*
  * Render react-table row for the customer groups table.
  */
 function CustomerGroupsTableRow(props: CustomerGroupsTableRowProps) {
-  const { row } = props
+  const { row } = props;
 
-  const navigate = useNavigate()
-  const notification = useNotification()
-  const { mutate } = useAdminDeleteCustomerGroup(row.original.id)
-  const { t } = useTranslation()
+  const navigate = useNavigate();
+  const notification = useNotification();
+  const { mutate } = useAdminDeleteCustomerGroup(row.original.id);
+  const { t } = useTranslation();
 
   const actions: ActionType[] = [
     {
-      label: t('customer-group-table-details', 'Details'),
+      label: t("customer-group-table-details", "Details"),
       onClick: () => navigate(row.original.id),
       icon: <DetailsIcon size={20} />,
     },
     {
-      label: t('customer-group-table-delete', 'Delete'),
+      label: t("customer-group-table-delete", "Delete"),
       onClick: () => {
         mutate(undefined, {
           onSuccess: () => {
             notification(
-              t('customer-group-table-success', 'Success'),
-              t('customer-group-table-group-deleted', 'Group deleted'),
-              'success'
-            )
+              t("customer-group-table-success", "Success"),
+              t("customer-group-table-group-deleted", "Group deleted"),
+              "success"
+            );
           },
           onError: () => {
             notification(
-              t('customer-group-table-error', 'Error'),
+              t("customer-group-table-error", "Error"),
               t(
-                'customer-group-table-failed-to-delete-the-group',
-                'Failed to delete the group'
+                "customer-group-table-failed-to-delete-the-group",
+                "Failed to delete the group"
               ),
-              'error'
-            )
+              "error"
+            );
           },
-        })
+        });
       },
       icon: <TrashIcon size={20} />,
-      variant: 'danger',
+      variant: "danger",
     },
-  ]
+  ];
 
   return (
     <Table.Row
-      color={'inherit'}
+      color={"inherit"}
       actions={actions}
       linkTo={props.row.original.id}
       {...props.row.getRowProps()}
     >
       {props.row.cells.map((cell, index) => (
         <Table.Cell {...cell.getCellProps()}>
-          {cell.render('Cell', { index })}
+          {cell.render("Cell", { index })}
         </Table.Cell>
       ))}
     </Table.Row>
-  )
+  );
 }
 
 /* ******************************************** */
@@ -155,18 +155,18 @@ function CustomerGroupsTableRow(props: CustomerGroupsTableRowProps) {
 /* ******************************************** */
 
 type CustomerGroupsTableProps = ReturnType<typeof useQueryFilters> & {
-  customerGroups: CustomerGroup[]
-  count: number
-  isLoading?: boolean
-}
+  customerGroups: CustomerGroup[];
+  count: number;
+  isLoading?: boolean;
+};
 
 /*
  * Root component of the customer groups table.
  */
 function CustomerGroupsTable(props: CustomerGroupsTableProps) {
   const { customerGroups, queryObject, count, paginate, setQuery, isLoading } =
-    props
-  const { t } = useTranslation()
+    props;
+  const { t } = useTranslation();
 
   const tableConfig: TableOptions<CustomerGroup> = {
     columns: CUSTOMER_GROUPS_TABLE_COLUMNS,
@@ -178,41 +178,41 @@ function CustomerGroupsTable(props: CustomerGroupsTableProps) {
     pageCount: Math.ceil(count / queryObject.limit),
     manualPagination: true,
     autoResetPage: false,
-  }
+  };
 
   const table: TableInstance<CustomerGroup> = useTable(
     tableConfig,
     useSortBy,
     usePagination
-  )
+  );
 
   // ********* HANDLERS *********
 
   const handleNext = () => {
     if (!table.canNextPage) {
-      return
+      return;
     }
 
-    paginate(1)
-    table.nextPage()
-  }
+    paginate(1);
+    table.nextPage();
+  };
 
   const handlePrev = () => {
     if (!table.canPreviousPage) {
-      return
+      return;
     }
 
-    paginate(-1)
-    table.previousPage()
-  }
+    paginate(-1);
+    table.previousPage();
+  };
 
   const handleSearch = (text: string) => {
-    setQuery(text)
+    setQuery(text);
 
     if (text) {
-      table.gotoPage(0)
+      table.gotoPage(0);
     }
-  }
+  };
 
   // ********* RENDER *********
 
@@ -225,7 +225,7 @@ function CustomerGroupsTable(props: CustomerGroupsTableProps) {
         count: count,
         offset: queryObject.offset,
         pageSize: queryObject.offset + table.rows.length,
-        title: t('customer-group-table-customer-groups', 'Customer groups'),
+        title: t("customer-group-table-customer-groups", "Customer groups"),
         currentPage: table.state.pageIndex + 1,
         pageCount: table.pageCount,
         nextPage: handleNext,
@@ -250,13 +250,13 @@ function CustomerGroupsTable(props: CustomerGroupsTableProps) {
         {/* BODY */}
         <Table.Body {...table.getTableBodyProps()}>
           {table.rows.map((row) => {
-            table.prepareRow(row)
-            return <CustomerGroupsTableRow row={row} key={row.id} />
+            table.prepareRow(row);
+            return <CustomerGroupsTableRow row={row} key={row.id} />;
           })}
         </Table.Body>
       </Table>
     </TableContainer>
-  )
+  );
 }
 
 /*
@@ -264,23 +264,23 @@ function CustomerGroupsTable(props: CustomerGroupsTableProps) {
  * Handles data fetching and query params persistence.
  */
 function CustomerGroupsTableContainer() {
-  const params = useQueryFilters(defaultQueryProps)
+  const params = useQueryFilters(defaultQueryProps);
 
   const {
     customer_groups,
     isLoading,
     count = 0,
-  } = useAdminCustomerGroups(params.queryObject)
+  } = useAdminCustomerGroups(params.queryObject);
 
-  useSetSearchParams(params.representationObject)
+  useSetSearchParams(params.representationObject);
 
-  const showPlaceholder = !customer_groups?.length && !params.queryObject.q
+  const showPlaceholder = !customer_groups?.length && !params.queryObject.q;
 
   if (showPlaceholder) {
     if (!isLoading) {
-      return <CustomerGroupsPlaceholder />
+      return <CustomerGroupsPlaceholder />;
     } else {
-      return null
+      return null;
     }
   }
 
@@ -291,7 +291,7 @@ function CustomerGroupsTableContainer() {
       isLoading={isLoading}
       {...params}
     />
-  )
+  );
 }
 
-export default CustomerGroupsTableContainer
+export default CustomerGroupsTableContainer;

@@ -12,7 +12,6 @@ import Orders from "../domain/orders";
 import OverviewRoute from "../domain/overview";
 import ProductsRoute from "../domain/products";
 import Settings from "../domain/settings";
-import Customers from "../domain/customers";
 
 const IndexPage = () => {
   const navigate = useNavigate();
@@ -37,7 +36,6 @@ const DashboardRoutes = () => {
           <Route path="products/*" element={<ProductsRoute />} />
           <Route path="orders/*" element={<Orders />} />
           <Route path="settings/*" element={<Settings />} />
-          <Route path="customers/*" element={<Customers />} />
           <Route path="inventory/*" element={<Inventory />} />
         </Routes>
       </Layout>

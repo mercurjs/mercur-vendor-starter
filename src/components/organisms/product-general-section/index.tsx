@@ -89,7 +89,7 @@ const ProductGeneralSection = ({ product }: Props) => {
         <ProductTags product={product} />
         <ProductDetails product={product} />
         {/* @ts-ignore */}
-        {product.shipping_options && (
+        {product.shipping_options && product.shipping_options.length > 0 && (
           <ProductShippingOptions product={product} />
         )}
         <ProductSalesChannels product={product} />

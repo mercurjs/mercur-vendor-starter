@@ -8,4 +8,4 @@ export function isValidEmail(email: string) {
   return email?.match(EMAIL_REGEX)
 }
 
-export const helpEmail = "hello@rigby.pl";
+export const helpEmail = "hello@mercurjs.com";

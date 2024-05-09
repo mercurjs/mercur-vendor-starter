@@ -2,20 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  Address,
-  ClaimOrder,
-  Fulfillment,
-  LineItem,
-  Swap,
-} from "@medusajs/medusa";
-import { capitalize } from "lodash";
+import { ClaimOrder, Fulfillment, LineItem, Swap } from "@medusajs/medusa";
 import {
   useAdminCancelOrder,
   useAdminOrder,
-  useAdminRegion,
   useAdminReservations,
-  useAdminUpdateOrder,
 } from "medusa-react";
 import moment from "moment";
 
@@ -30,7 +21,6 @@ import ClipboardCopyIcon from "../../../components/fundamentals/icons/clipboard-
 import CornerDownRightIcon from "../../../components/fundamentals/icons/corner-down-right-icon";
 import BodyCard from "../../../components/organisms/body-card";
 import Timeline from "../../../components/organisms/timeline";
-import { AddressType } from "../../../components/templates/address-form";
 import TransferOrdersModal from "../../../components/templates/transfer-orders-modal";
 import useClipboard from "../../../hooks/use-clipboard";
 import useImperativeDialog from "../../../hooks/use-imperative-dialog";
@@ -45,7 +35,6 @@ import OrderEditProvider, { OrderEditContext } from "../edit/context";
 import OrderEditModal from "../edit/modal";
 
 import SummaryCard from "./detail-cards/summary";
-import AddressModal from "./address-modal";
 import CreateFulfillmentModal from "./create-fulfillment";
 import EmailModal from "./email-modal";
 import MarkShippedModal from "./mark-shipped";
@@ -119,12 +108,6 @@ const OrderDetails = () => {
   const { t } = useTranslation();
 
   const dialog = useImperativeDialog();
-
-  const [addressModal, setAddressModal] = useState<null | {
-    address?: Address | null;
-    type: AddressType;
-  }>(null);
-
   const [emailModal, setEmailModal] = useState<null | {
     email: string;
   }>(null);
@@ -141,17 +124,6 @@ const OrderDetails = () => {
   });
   const cancelOrder = useAdminCancelOrder(id!);
 
-  const {
-    state: addressModalState,
-    close: closeAddressModal,
-    open: openAddressModal,
-  } = useToggleState();
-
-  const { mutate: updateOrder } = useAdminUpdateOrder(id!);
-
-  const { region } = useAdminRegion(order?.region_id!, {
-    enabled: !!order?.region_id,
-  });
   const { isFeatureEnabled } = useFeatureFlag();
   const inventoryEnabled = useMemo(() => {
     return isFeatureEnabled("inventoryService");
@@ -462,16 +434,6 @@ const OrderDetails = () => {
               </div>
               <Timeline orderId={order.id} />
             </div>
-
-            <AddressModal
-              onClose={closeAddressModal}
-              open={addressModalState}
-              onSave={updateOrder}
-              address={addressModal?.address || undefined}
-              type={addressModal?.type}
-              allowedCountries={region?.countries}
-            />
-
             {emailModal && (
               <EmailModal
                 handleClose={() => setEmailModal(null)}

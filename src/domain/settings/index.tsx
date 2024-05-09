@@ -54,7 +54,7 @@ const settings: SettingsCardType[] = [
     to: "/a/settings/shipping-options",
   },
   {
-    heading: "hello@rigby.pl",
+    heading: "hello@mercurjs.com",
     description: "Can’t find the answers you’re looking for? Email us!",
     icon: MailIcon,
     externalLink: `mailto:${helpEmail}`,

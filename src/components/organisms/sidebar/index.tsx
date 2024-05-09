@@ -7,7 +7,6 @@ import GearIcon from "../../fundamentals/icons/gear-icon";
 import TagIcon from "../../fundamentals/icons/tag-icon";
 import SidebarMenuItem from "../../molecules/sidebar-menu-item";
 import UserMenu from "../../molecules/user-menu";
-import UsersIcon from "../../fundamentals/icons/users-icon";
 
 const ICON_SIZE = 20;
 
@@ -56,12 +55,6 @@ const Sidebar: React.FC = () => {
             icon={<TagIcon size={ICON_SIZE} />}
             text={t("sidebar-products", "Products")}
             triggerHandler={triggerHandler}
-          />
-          <SidebarMenuItem
-            pageLink={"/a/customers"}
-            icon={<UsersIcon size={ICON_SIZE} />}
-            triggerHandler={triggerHandler}
-            text={t("sidebar-customers", "Customers")}
           />
           <SidebarMenuItem
             pageLink={"/a/settings"}
