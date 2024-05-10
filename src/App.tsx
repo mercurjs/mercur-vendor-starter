@@ -1,16 +1,22 @@
-import { lazy, Suspense } from 'react';
-import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
+import { lazy, Suspense } from "react";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  RouterProvider,
+} from "react-router-dom";
 
-import Spinner from './components/atoms/spinner';
-import { WRITE_KEY } from './constants/analytics';
-import { AnalyticsProvider } from './providers/analytics-provider';
+import Spinner from "./components/atoms/spinner";
+import { WRITE_KEY } from "./constants/analytics";
+import { AnalyticsProvider } from "./providers/analytics-provider";
+import RegisterPage from "./pages/register";
 
-const NotFound = lazy(() => import('./pages/404'));
-const Dashboard = lazy(() => import('./pages/a'));
-const IndexPage = lazy(() => import('./pages/index'));
-const InvitePage = lazy(() => import('./pages/invite'));
-const LoginPage = lazy(() => import('./pages/login'));
-const ResetPasswordPage = lazy(() => import('./pages/reset-password'));
+const NotFound = lazy(() => import("./pages/404"));
+const Dashboard = lazy(() => import("./pages/a"));
+const IndexPage = lazy(() => import("./pages/index"));
+const InvitePage = lazy(() => import("./pages/invite"));
+const LoginPage = lazy(() => import("./pages/login"));
+const ResetPasswordPage = lazy(() => import("./pages/reset-password"));
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -33,10 +39,11 @@ const router = createBrowserRouter(
         }
       />
       <Route path="login" element={<LoginPage />} />
+      <Route path="register" element={<RegisterPage />} />
       <Route path="reset-password" element={<ResetPasswordPage />} />
       <Route path="*" element={<NotFound />} />
-    </>,
-  ),
+    </>
+  )
 );
 
 const Loading = () => (

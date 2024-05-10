@@ -5,19 +5,19 @@ import React, {
   useImperativeHandle,
   useRef,
   useState,
-} from 'react'
-import clsx from 'clsx'
+} from "react";
+import clsx from "clsx";
 
-import EyeIcon from '../../fundamentals/icons/eye-icon'
-import EyeOffIcon from '../../fundamentals/icons/eye-off-icon'
-import LockIcon from '../../fundamentals/icons/lock-icon'
+import EyeIcon from "../../fundamentals/icons/eye-icon";
+import EyeOffIcon from "../../fundamentals/icons/eye-off-icon";
+import LockIcon from "../../fundamentals/icons/lock-icon";
 
 type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  key?: string
-  onChange?: ChangeEventHandler<HTMLInputElement>
-  onFocus?: FocusEventHandler<HTMLInputElement>
-  props?: React.HTMLAttributes<HTMLDivElement>
-}
+  key?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  onFocus?: FocusEventHandler<HTMLInputElement>;
+  props?: React.HTMLAttributes<HTMLDivElement>;
+};
 
 const SigninInput = React.forwardRef(
   (
@@ -33,31 +33,31 @@ const SigninInput = React.forwardRef(
     }: InputProps,
     ref
   ) => {
-    const inputRef = useRef(null)
-    const [showPassword, setShowPassword] = useState(false)
-    const [inputType, setInputType] = useState(type)
+    const inputRef = useRef(null);
+    const [showPassword, setShowPassword] = useState(false);
+    const [inputType, setInputType] = useState(type);
 
     useEffect(() => {
-      if (type === 'password' && showPassword) {
-        setInputType('text')
+      if (type === "password" && showPassword) {
+        setInputType("text");
       }
 
-      if (type === 'password' && !showPassword) {
-        setInputType('password')
+      if (type === "password" && !showPassword) {
+        setInputType("password");
       }
-    }, [type, showPassword])
+    }, [type, showPassword]);
 
-    useImperativeHandle(ref, () => inputRef.current)
+    useImperativeHandle(ref, () => inputRef.current);
 
     return (
       <div
         className={clsx(
-          'rounded-rounded h-[40px] w-[300px] overflow-hidden border',
-          'bg-grey-5 inter-base-regular placeholder:text-grey-40',
-          'focus-within:shadow-input focus-within:border-violet-60',
-          'flex items-center',
+          "rounded-rounded h-[40px] w-[300px] overflow-hidden border",
+          "bg-grey-5 inter-base-regular placeholder:text-grey-40",
+          "focus-within:shadow-input focus-within:border-violet-60",
+          "flex items-center",
           {
-            'text-grey-40 pl-xsmall pointer-events-none focus-within:border-none focus-within:shadow-none':
+            "text-grey-40 pl-xsmall pointer-events-none focus-within:border-none focus-within:shadow-none":
               props.readOnly,
           },
           className
@@ -65,21 +65,21 @@ const SigninInput = React.forwardRef(
       >
         <input
           className={clsx(
-            'remove-number-spinner leading-base w-full bg-transparent py-3 px-4 outline-none outline-0',
+            "remove-number-spinner leading-base w-full bg-transparent py-3 px-4 outline-none outline-0",
             {
-              'pl-xsmall': props.readOnly,
+              "pl-xsmall": props.readOnly,
             }
           )}
           ref={inputRef}
           name={name}
           key={key || name}
-          placeholder={placeholder || 'Placeholder'}
+          placeholder={placeholder || "Placeholder"}
           onChange={onChange}
           onFocus={onFocus}
           type={inputType}
           {...props}
         />
-        {type === 'password' && (
+        {type === "password" && (
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
@@ -93,10 +93,10 @@ const SigninInput = React.forwardRef(
           <LockIcon size={16} className="text-grey-40 mr-base" />
         )}
       </div>
-    )
+    );
   }
-)
+);
 
-SigninInput.displayName = 'SigninInput'
+SigninInput.displayName = "SigninInput";
 
-export default SigninInput
+export default SigninInput;

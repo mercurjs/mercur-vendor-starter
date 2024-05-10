@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAdminGetSession } from 'medusa-react';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAdminGetSession } from "medusa-react";
 
-import LoginCard from '../components/organisms/login-card';
-import ResetTokenCard from '../components/organisms/reset-token-card';
-import SEO from '../components/seo';
-import PublicLayout from '../components/templates/login-layout';
+import LoginCard from "../components/organisms/login-card";
+import ResetTokenCard from "../components/organisms/reset-token-card";
+import SEO from "../components/seo";
+import PublicLayout from "../components/templates/login-layout";
 
 const LoginPage = () => {
   const [resetPassword, setResetPassword] = useState(false);
@@ -19,12 +18,12 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (user) {
-      navigate('/');
+      navigate("/");
     }
   }, [user, navigate]);
 
   useEffect(() => {
-    if (window.location.search.includes('reset-password')) {
+    if (window.location.search.includes("reset-password")) {
       setResetPassword(true);
     }
   }, []);
@@ -32,7 +31,7 @@ const LoginPage = () => {
   const showLogin = () => {
     setResetPassword(false);
 
-    navigate('/login', { replace: true });
+    navigate("/login", { replace: true });
   };
 
   const showResetPassword = () => {
@@ -43,7 +42,11 @@ const LoginPage = () => {
     <PublicLayout>
       <SEO title="Login" />
 
-      {resetPassword ? <ResetTokenCard goBack={showLogin} /> : <LoginCard toResetPassword={showResetPassword} />}
+      {resetPassword ? (
+        <ResetTokenCard goBack={showLogin} />
+      ) : (
+        <LoginCard toResetPassword={showResetPassword} />
+      )}
     </PublicLayout>
   );
 };
