@@ -4,6 +4,7 @@
   "resolutions": {
     "postcss": "^8.4.31"
   },
+  "packageManager": "yarn@4.2.2",
   "scripts": {
     "dev": "vite --port 7000",
     "build": "vite build",
